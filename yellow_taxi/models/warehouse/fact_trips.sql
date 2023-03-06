@@ -26,8 +26,14 @@ with source as (
         tpep_pickup_datetime,
         tpep_dropoff_datetime,
     from {{ source('yellow_taxi', 'yellow_tripdata_2019_12') }}
-    where EXTRACT(YEAR FROM tpep_pickup_datetime) = 2019
-        AND EXTRACT(MONTH FROM tpep_pickup_datetime) = 12
+    where 
+        (
+            (EXTRACT(YEAR FROM tpep_pickup_datetime) = 2019
+                AND EXTRACT(MONTH FROM tpep_pickup_datetime) = 12)
+            OR
+            (EXTRACT(YEAR FROM tpep_dropoff_datetime) = 2019
+                AND EXTRACT(MONTH FROM tpep_dropoff_datetime) = 12)
+            )
         AND payment_type IN (1,2,3,4,5,6)
         AND VendorID IN (1,2)
         AND ratecodeid IN (1,2,3,4,5,6)
