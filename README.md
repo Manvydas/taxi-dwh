@@ -72,8 +72,15 @@ However, currenly it was not possible so I did some assumptions and following da
 
 Finally, analytics layer was created.
 Generaly, it duplicates warehouse layer with views and adds **trip_time_seconds** variable.
-I was also thinking about OBT, but decided to keep it this way.
+I was also thinking about OBT, but decided to keep it this way. It would be easier to decide knowing analysts needs.
 
 For data transformations dbt was used. Some general data uniquenes, not null tests performed.
-They could be improved by allowing only particular values, testing relations, data sources.
+Tests could be improved by testing relations, data sources, allowing only particular values in some fields.
 I was not able to create date partitioned tables due to google free account limitations.
+
+For scheduling data pipelines I would think about several options:
+1. Cron jobs to perform proccess on given schedule;
+2. Cloud-based scheduling/processing tools like Google Dataflow;
+3. Using workflow managing tools like Apache Airflow.
+
+When implementing any of the scheduling methods, I would collect data pipilines performance statistics (error rates, resources usage, data volumes) and general info about data processed (missing values, outliers, data types).
