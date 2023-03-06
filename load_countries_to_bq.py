@@ -5,14 +5,11 @@ from google.cloud import bigquery
 client = bigquery.Client()
 
 # Defining the path to the file
-year, month = 2019, 12
-file_name = 'yellow_tripdata_{}-{}.parquet'.format(year, month)
-file_name_out = 'yellow_tripdata_{}_{}'.format(year, month)
-base_link = 'https://d37ci6vzurychx.cloudfront.net/trip-data/'
-parquet_path = base_link + file_name
+file_name_out = 'taxi_zones_lookup'
+file_path = 'https://d37ci6vzurychx.cloudfront.net/misc/taxi+_zone_lookup.csv'
 
 # Read the Parquet file into a pandas DataFrame
-df = pd.read_parquet(parquet_path)
+df = pd.read_csv(file_path)
 
 data_dim = df.shape
 print(f"Loaded {data_dim[0]} rows and {data_dim[1]} columns for transfer.")
