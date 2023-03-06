@@ -28,10 +28,12 @@ pip install -r requirements.txt
 
 # Summary
 Raw data is available in single Parquet files for each year-month combination. Thus it was decided to upload it directly from the [TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) and load it to BigQuery.
-Raw data has been uploaded to Google BigQuery by running `raw_data_transfer_to_bq.py` and `load_countries_to_bq.py` on a local machine. No transformations performed in this step, automatic schema detection was used.
+Raw data has been uploaded to Google BigQuery by running `raw_data_transfer_to_bq.py` and `load_countries_to_bq.py` on a local machine.
+No transformations performed in this step, automatic schema detection was used, data located in EU.
 It could have been run on google cloud shell editor too or included in workflow orchestration tool like apache airflow.
 
-After exploring raw data it was decided to split data warehouse layer into single fact table containing all quantitative information about NYC yellow taxi trips and 5 dimensional tables containing descriptive information that can be used to filter, group, or aggregate the data. The foreign keys in the fact table were created to be able to connect it to the dimension tables.
+After exploring raw data it was decided to split data warehouse layer into single fact table containing all quantitative information about NYC yellow taxi trips and 5 dimensional tables containing descriptive information that can be used to filter, group, or aggregate the data.
+The foreign keys in the fact table were created to be able to connect it to the dimension tables.
 
 Physical data warehouse ERD:
 ![Physical data warehouse ERD](yellow-taxi-physical-erd.drawio.png)
@@ -49,9 +51,11 @@ Data dictionary: *Yellow trip data will now include 1 additional column (‘airp
 - **payment_type** values range from 0 to 5 instead of from 1 to 6
 - Missing data mostly comes from **VendorID == 2** and **payment_type == 0**
 
-For comparison purposes same tests were performed on 2021-12 dataset. Same comments except **airport_fee** available.
+For comparison purposes same tests were performed on 2021-12 dataset.
+Same comments except **airport_fee** available.
 
-To solve theses issues it would be beneficial to disscuss with bussiness/IT people who are creating or managing it. However, currenly it was not possible so I did some assumptions and following data filters were applied:
+To solve theses issues it would be beneficial to disscuss with bussiness/IT people who are creating or managing it.
+However, currenly it was not possible so I did some assumptions and following data filters were applied:
 ```
     (
         (YEAR(pickup time) = 2019
@@ -66,7 +70,10 @@ To solve theses issues it would be beneficial to disscuss with bussiness/IT peop
     AND passenger_count NOT IN (0)
 ```
 
-Finally, analytics layer was created. Generaly, it duplicates warehouse layer with views and adds **trip_time** variable. I was also thinking about OBT, but decided to keep it this way.
+Finally, analytics layer was created.
+Generaly, it duplicates warehouse layer with views and adds **trip_time_seconds** variable.
+I was also thinking about OBT, but decided to keep it this way.
 
-For data transformations dbt was used. Some general data uniquenes, not null tests performed. They could be improved by allowing only particular values, testing relations, data sources.
+For data transformations dbt was used. Some general data uniquenes, not null tests performed.
+They could be improved by allowing only particular values, testing relations, data sources.
 I was not able to create date partitioned tables due to google free account limitations.

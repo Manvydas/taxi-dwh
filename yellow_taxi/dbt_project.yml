@@ -41,6 +41,6 @@ models:
       dim_date:
         +materialized: view
     analytics:
-      +enabled: false
+      +enabled: true
       +materialized: view
       +schema: analytics_yellow_taxi
