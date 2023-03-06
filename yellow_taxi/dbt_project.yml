@@ -44,3 +44,5 @@ models:
       +enabled: true
       +materialized: view
       +schema: analytics_yellow_taxi
+      obt_yellow_taxi:
+        +materialized: view
