@@ -1,6 +1,8 @@
 with source as (
 
-    select distinct VendorID AS id, from {{ source('yellow_taxi', 'yellow_tripdata_2019_12') }}
+    select VendorID AS id,
+    from {{ source('yellow_taxi', 'yellow_tripdata_2019_12') }}
+    GROUP BY 1
 
 )
 select 
