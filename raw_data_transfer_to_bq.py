@@ -2,15 +2,42 @@ import os
 import logging
 import pandas as pd
 from google.cloud import bigquery
+from google.cloud.exceptions import NotFound
 
 
-def load_parquet_to_bigquery(year: int, month: int, base_link: str, table_id: str):
+def create_bigquery_dataset(dataset_id: str):
     # Set up a BigQuery client object
     client = bigquery.Client()
+
+    # Create the dataset object
+    dataset = bigquery.Dataset(dataset_id)
+
+    # Check if the dataset already exists
+    try:
+        client.get_dataset(dataset_id)  # Make an API request.
+        logging.info(f"Dataset {dataset_id} already exists")
+    except Exception:
+        # Set additional properties for the dataset
+        dataset.location = 'EU'
+        
+        # Create the dataset if it does not exist
+        dataset = client.create_dataset(dataset, timeout=30)  # Make an API request.
+        logging.info(f"Created dataset {dataset.dataset_id} in project {dataset.project}.")
+    except Exception as e:
+        logging.error(f"Failed to create dataset {dataset_id}: {str(e)}")
+
+
+def load_parquet_to_bigquery(year: int, month: int, base_link: str, dataset_id: str):
+    # Set up a BigQuery client object
+    client = bigquery.Client()
+
+    # Check if the dataset exists
+    create_bigquery_dataset(dataset_id)
 
     # Defining the path to the file
     file_name = f'yellow_tripdata_{year}-{month}.parquet'
     file_name_out = f'yellow_tripdata_{year}_{month}'
+    table_id = f'{dataset_id}.{file_name_out}'
     parquet_path = os.path.join(base_link, file_name)
 
     # Read the Parquet file into a pandas DataFrame
@@ -19,9 +46,6 @@ def load_parquet_to_bigquery(year: int, month: int, base_link: str, table_id: st
     except Exception as e:
         logging.error(f"Failed to load Parquet file: {str(e)}")
         return
-
-    # Define the BigQuery table ID (in the format 'project_id.dataset_id.table_id')
-    table_id = f'{table_id}.{file_name_out}'
 
     # Write the DataFrame to BigQuery
     job_config = bigquery.LoadJobConfig(autodetect=True)
@@ -43,10 +67,10 @@ def main():
     year = int(os.environ.get("YEAR", 2019))
     month = int(os.environ.get("MONTH", 12))
     base_link = os.environ.get("BASE_LINK", "https://d37ci6vzurychx.cloudfront.net/trip-data/")
-    table_id = os.environ.get("TABLE_ID", "kevin-task.yellow_taxi_raw")
+    dataset_id = os.environ.get("DATASET_ID", "kevin-task.yellow_taxi_raw")
 
     # Load the Parquet file into BigQuery
-    load_parquet_to_bigquery(year, month, base_link, table_id)
+    load_parquet_to_bigquery(year, month, base_link, dataset_id)
 
 
 if __name__ == "__main__":
