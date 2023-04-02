@@ -16,14 +16,14 @@ def create_bigquery_dataset(dataset_id: str):
     try:
         client.get_dataset(dataset_id)  # Make an API request.
         logging.info(f"Dataset {dataset_id} already exists")
-    except Exception:
+    except Exception as e:
         # Set additional properties for the dataset
         dataset.location = 'EU'
         
         # Create the dataset if it does not exist
         dataset = client.create_dataset(dataset, timeout=30)  # Make an API request.
         logging.info(f"Created dataset {dataset.dataset_id} in project {dataset.project}.")
-    except Exception as e:
+    else:
         logging.error(f"Failed to create dataset {dataset_id}: {str(e)}")
 
 
