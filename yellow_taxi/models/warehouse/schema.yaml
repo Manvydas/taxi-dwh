@@ -13,4 +13,9 @@ models:
             tests:
                 - not_null
                 - unique
-
+    - name: dim_locations
+      columns:      
+          - name: id
+            tests:
+                - not_null
+                - unique
