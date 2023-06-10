@@ -17,14 +17,15 @@ def create_bigquery_dataset(dataset_id: str):
         client.get_dataset(dataset_id)  # Make an API request.
         logging.info(f"Dataset {dataset_id} already exists")
     except Exception as e:
-        # Set additional properties for the dataset
-        dataset.location = 'EU'
-        
-        # Create the dataset if it does not exist
-        dataset = client.create_dataset(dataset, timeout=30)  # Make an API request.
-        logging.info(f"Created dataset {dataset.dataset_id} in project {dataset.project}.")
-    else:
-        logging.error(f"Failed to create dataset {dataset_id}: {str(e)}")
+        try:
+            # Set additional properties for the dataset
+            dataset.location = 'EU'
+            
+            # Create the dataset if it does not exist
+            dataset = client.create_dataset(dataset, timeout=30)  # Make an API request.
+            logging.info(f"Created dataset {dataset.dataset_id} in project {dataset.project}.")
+        except:
+            logging.error(f"Failed to create dataset {dataset_id}.")
 
 
 def load_parquet_to_bigquery(year: int, month: int, base_link: str, dataset_id: str):
@@ -67,7 +68,7 @@ def main():
     year = int(os.environ.get("YEAR", 2019))
     month = int(os.environ.get("MONTH", 12))
     base_link = os.environ.get("BASE_LINK", "https://d37ci6vzurychx.cloudfront.net/trip-data/")
-    dataset_id = os.environ.get("DATASET_ID", "kevin-task.yellow_taxi_raw")
+    dataset_id = os.environ.get("DATASET_ID", "turing-example.yellow_taxi_raw")
 
     # Load the Parquet file into BigQuery
     load_parquet_to_bigquery(year, month, base_link, dataset_id)

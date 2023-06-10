@@ -15,7 +15,7 @@ data_dim = df.shape
 print(f"Loaded {data_dim[0]} rows and {data_dim[1]} columns for transfer.")
 
 # Define the BigQuery table ID (in the format 'project_id.dataset_id.table_id')
-table_id = 'kevin-task.yellow_taxi_raw.' + file_name_out
+table_id = 'turing-example.yellow_taxi_raw.' + file_name_out
 
 # Write the DataFrame to BigQuery
 job_config = bigquery.LoadJobConfig(autodetect=True)
