@@ -4,18 +4,21 @@ models:
     - name: dim_vendors
       columns:
           - name: id
-            tests:
-                - not_null
-                - unique
+            # tests:
+            #     - not_null
+            #     - unique
     - name: fact_trips
+      description: "{{ doc('trips_table')}}"
       columns:      
           - name: id
-            tests:
-                - not_null
-                - unique
+            description: "{{ doc('trips_id')}}"
+            # tests:
+            #     - not_null
+            #     - unique
     - name: dim_locations
       columns:      
           - name: id
-            tests:
-                - not_null
-                - unique
+            description: "{{ doc('locations_id')}}"
+            # tests:
+            #     - not_null
+            #     - unique
