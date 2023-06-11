@@ -4,6 +4,7 @@ models:
     - name: dim_vendors
       columns:
           - name: id
+          description: "{{ doc('vendor_id')}}"
             # tests:
             #     - not_null
             #     - unique
@@ -15,6 +16,14 @@ models:
             # tests:
             #     - not_null
             #     - unique
+          - name: pickup_location_id
+            description: "{{ doc('pickup_location_id')}}"
+          - name: dropoff_location_id
+            description: "{{ doc('dropoff_location_id')}}"
+          - name: tpep_pickup_datetime
+            description: "{{ doc('pickup_location_datetime')}}"
+          - name: tpep_dropoff_datetime
+            description: "{{ doc('dropoff_location_datetime')}}"
     - name: dim_locations
       columns:      
           - name: id
