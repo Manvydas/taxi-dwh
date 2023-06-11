@@ -4,7 +4,7 @@ models:
     - name: dim_vendors
       columns:
           - name: id
-          description: "{{ doc('vendor_id')}}"
+            description: "{{ doc('vendor_id')}}"
             # tests:
             #     - not_null
             #     - unique
