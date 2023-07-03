@@ -86,3 +86,4 @@ For scheduling data pipelines I would think about several options:
 When implementing any of the scheduling methods, I would collect data pipilines performance statistics (error rates, resources usage, data volumes) and general info about data processed (missing values, outliers, data types).
 
 
+ADDING A NEW LINE
